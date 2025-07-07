@@ -64,48 +64,27 @@ Development Environment:
 
 ```
 prescripto-app/
-├── 📱 frontend/                 # Patient Portal (Port: 5173)
+├── 📱 frontend/                 
 │   ├── src/
-│   │   ├── components/         # Reusable UI components
-│   │   │   ├── Header.jsx     # Landing page hero section
-│   │   │   ├── Navbar.jsx     # Navigation with auth state
-│   │   │   ├── SpecialityMenu.jsx # Doctor speciality filter
-│   │   │   ├── TopDoctors.jsx # Featured doctors carousel
-│   │   │   └── RazorpayPayment.jsx # Payment integration
-│   │   ├── pages/             # Route components
-│   │   │   ├── Home.jsx       # Landing page
-│   │   │   ├── Doctors.jsx    # Doctor listing with filters
-│   │   │   ├── Appointments.jsx # Booking interface
-│   │   │   ├── MyProfile.jsx  # User dashboard
-│   │   │   └── MyAppointments.jsx # Appointment history
-│   │   ├── context/           # State management
-│   │   │   └── AppContext.jsx # Global application state
-│   │   ├── api/               # HTTP layer
-│   │   │   ├── ApiContextProvider.jsx # API methods
-│   │   │   └── axiosConfig.js # Request/response interceptors
-│   │   └── utils/             # Helper functions
-│   │       └── GenerateDateTimeSlots.js # Time slot logic
-│   └── package.json
+│   │   ├── components/         # Reusable UI parts (Navbar, Header, etc.)
+│   │   ├── pages/              # Main screens (Home, Doctors, Profile, etc.)
+│   │   ├── context/            # Global state management
+│   │   ├── api/                # API calls and Axios setup
+│   │   └── utils/              # Helper functions (e.g., time slots)
+│   └── package.json            # Frontend dependencies
 │
-├── 🏥 adminPanel/               # Admin/Doctor Portal (Port: 5174)
+├── 🏥 adminPanel/               # Admin & Doctor dashboard (Port: 5174)
 │   ├── src/
-│   │   ├── components/         # Admin-specific components
-│   │   │   ├── Navbar.jsx     # Admin navigation
-│   │   │   └── Sidebar.jsx    # Dashboard sidebar
-│   │   ├── pages/             # Admin/Doctor pages
-│   │   │   ├── Admin/         # Administrator interface
-│   │   │   └── Doctor/        # Doctor dashboard
-│   │   ├── context/           # Admin state management
-│   │   ├── api/               # Admin API layer
-│   │   └── utils/             # Admin utilities
-│   │       ├── CalculateAgeFromDOB.js
-│   │       ├── GetIndianDateTime.js
-│   │       └── SlotDateFormatter.js
-│   └── package.json
+│   │   ├── components/         # Admin UI parts (Navbar, Sidebar)
+│   │   ├── pages/              # Admin and Doctor views
+│   │   ├── context/            # State for admin/doctor
+│   │   ├── api/                # API setup for admin/doctor
+│   │   └── utils/              # Utilities (date formatting, age calc, etc.)
+│   └── package.json            # Admin panel dependencies
 │
-├── 📁 .vscode/                 # VS Code configuration
-├── 📄 README.md               # Project documentation
-└── 📄 package.json            # Root package configuration
+├── 📁 .vscode/                 # VS Code workspace settings
+├── 📄 README.md               # Project overview and setup guide
+
 ```
 
 ## 🚀 Advanced Features Implementation
