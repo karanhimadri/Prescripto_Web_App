@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import { apiContext } from "../api/ApiContextProvider";
 
 const Navbar = () => {
+  const { trackLoggrdIn } = useContext(AppContext)
+  const { logout } = useContext(apiContext)
+
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [token, setToken] = useState(true);
+
+  function Logout() {
+    logout();
+    navigate("/")
+  }
 
   return (
     <>
@@ -31,7 +42,7 @@ const Navbar = () => {
           </NavLink>
         </ul>
         <div className="flex items-center gap-4">
-          {token ? (
+          {trackLoggrdIn ? (
             <div className="flex items-center gap-2 cursor-pointer group relative">
               <img className="w-8 rounded-full" src={assets.profile_pic} alt="" />
               <img className="w-2.5" src={assets.dropdown_icon} alt="" />
@@ -39,13 +50,13 @@ const Navbar = () => {
                 <div className="min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4">
                   <p onClick={() => navigate("/my-profile")} className="hover:text-black cursor-pointer">My profile</p>
                   <p onClick={() => navigate("/my-appointments")} className="hover:text-black cursor-pointer">My Appointments</p>
-                  <p onClick={() => setToken(false)} className="hover:text-red-700 cursor-pointer">Logout</p>
+                  <p onClick={() => Logout()} className="hover:text-red-700 cursor-pointer">Logout</p>
                 </div>
               </div>
             </div>
           ) : (
             <button
-                onClick={() => { navigate("/login"); window.scrollTo(0,0)}}
+              onClick={() => { navigate("/login"); window.scrollTo(0, 0) }}
               className="bg-primary text-white px-8 py-3 rounded-full font-medium hidden md:block"
             >
               Create Account

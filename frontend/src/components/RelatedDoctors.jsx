@@ -1,23 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AppContext } from "../context/AppContext";
 import Doctor from "./Doctor";
 import { useNavigate } from "react-router-dom";
+import { doctors } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
 
 const RelatedDoctors = ({ docId, speciality }) => {
+  const { doctorsData } = useContext(AppContext)
   const [relDocs, setRelDocs] = useState([]);
-  const { doctors } = useContext(AppContext);
-    const navigate = useNavigate();
-    console.log(docId,speciality)
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (doctors.length > 0 && speciality) {
-      const relatedDoctors = doctors.filter(
-        (doc) => doc.speciality === speciality && doc._id !== docId
+    if (doctorsData?.length > 0 && speciality) {
+      const relatedDoctors = doctorsData?.filter(
+        (doc) => doc.speciality === speciality && doc.email !== docId
       );
       setRelDocs(relatedDoctors);
     }
-  
-  }, [doctors, docId, speciality]);
+
+  }, [doctorsData, docId, speciality]);
 
   return (
     <div className="flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10">
@@ -28,7 +28,7 @@ const RelatedDoctors = ({ docId, speciality }) => {
       <div className="w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0">
         {relDocs.map((item, index) => (
           <Doctor
-            onClick={() => { navigate(`/appointment/${item._id}`); window.scrollTo(0,0)}}
+            onClick={() => { navigate(`/appointment/${item.email}`); window.scrollTo(0, 0) }}
             key={index}
             doctorInfo={item}
           />

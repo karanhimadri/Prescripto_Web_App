@@ -1,7 +1,16 @@
 import React, { useState } from "react";
+import { useContext } from "react";
+import { apiContext } from "../api/ApiContextProvider";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const LogIn = () => {
+
+  const { loading, createAccountForPatient, logIn } = useContext(apiContext)
+
+  const navigate = useNavigate();
   const [state, setState] = useState("Sign Up");
+  const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,9 +21,28 @@ const LogIn = () => {
     setFormData((pre) => ({ ...pre, [event.target.name]: event.target.value }));
   };
 
-  const onSubmitHandle = (event) => {
+  const onSubmitHandle = async (event) => {
     event.preventDefault();
+    setMessage("")
+
+    if (state === "Sign Up") {
+      const res = await createAccountForPatient(formData);
+      if (res.success) {
+        navigate("/")
+      } else {
+        setMessage(res.message)
+      }
+    } else {
+      const res = await logIn({ email: formData.email, password: formData.password })
+      if (res.success) {
+        navigate("/")
+      } else {
+        setMessage(res.message)
+      }
+    }
   };
+
+
   return (
     <form className="min-h-[80vh] flex items-center">
       <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg">
@@ -60,8 +88,16 @@ const LogIn = () => {
             required
           />
         </div>
-        <button className="bg-primary text-white w-full py-2 rounded-md text-base">
-          {state === "Sign Up" ? "Create Account" : "Login"}
+
+        {/* For message showing */}
+        <p className="text-gray-500">{message}</p>
+
+        <button
+          className="bg-primary text-white w-full py-2 rounded-md text-base"
+          onClick={onSubmitHandle}
+          disabled={loading.createAccountForPatient}
+        >
+          {loading.createAccountForPatient ? (state === "Sign Up" ? "Creating Account..." : "Login...") : (state === "Sign Up" ? "Create Account" : "Login")}
         </button>
 
         {state === "Sign Up" ? (

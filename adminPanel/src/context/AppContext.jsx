@@ -1,16 +1,22 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
-export const  AppContext = createContext()
+export const AppContext = createContext()
 
-const AppContextProvider = ({children}) => {
+const AppContextProvider = ({ children }) => {
 
-    const value = {
-        
-    }
+  const [token, setToken] = useState({
+    aToken: "",
+    dToken: ""
+  }) 
 
-    return <AppContext.Provider value={value}>
-        {children}
-    </AppContext.Provider>
+  const value = {
+    token,
+    setToken
+  }
+
+  return <AppContext.Provider value={value}>
+    {children}
+  </AppContext.Provider>
 }
 
 export default AppContextProvider
