@@ -90,7 +90,7 @@ const LogIn = () => {
         </div>
 
         {/* For message showing */}
-        <p className="text-gray-500">{message}</p>
+        <p className="text-red-600">{message}</p>
 
         <button
           className="bg-primary text-white w-full py-2 rounded-md text-base"

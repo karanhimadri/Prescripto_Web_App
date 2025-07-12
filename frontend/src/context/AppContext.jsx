@@ -32,13 +32,17 @@ const AppContextProvider = ({ children }) => {
     }));
   };
 
+  const [appointmentsData, setAppointmentsData] = useState([]);
+
   const value = {
     user,
     trackLoggrdIn,
     handleUserData,
     setTrackLoggrdIn,
     setDoctorsData,
-    doctorsData
+    doctorsData,
+    appointmentsData,
+    setAppointmentsData,
   }
 
   return <AppContext.Provider value={value}>

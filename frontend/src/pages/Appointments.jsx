@@ -1,17 +1,21 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState, } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import RelatedDoctors from "../components/RelatedDoctors";
 import { getNext7DatesInKolkata, getAvailableHourlyTimeSlots, } from "../utils/GenerateDateTimeSlots";
+import { apiContext } from "../api/ApiContextProvider";
+import { toast } from 'react-toastify';
 
 const Appointments = () => {
   const { docId } = useParams();
-  const { doctorsData, user } = useContext(AppContext);
+  const { doctorsData, user, trackLoggrdIn } = useContext(AppContext);
+  const { bookAppointment, fetchAllAppointments } = useContext(apiContext);
 
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
   const [slotIndex, setSlotIndex] = useState({ daySlot: 0, timeSlot: -1 });
+  const navigate = useNavigate();
 
   useEffect(() => {
     setDates(getNext7DatesInKolkata());
@@ -41,22 +45,27 @@ const Appointments = () => {
     }
   };
 
-  const handleAppointBooking = (doctorId) => {
+  const handleAppointBooking = async (doctorId) => {
     if (slotIndex.timeSlot === -1) {
       alert("Please select a time slot before booking!");
       return;
     }
-
+    if (!trackLoggrdIn) {
+      navigate("/login")
+      toast.error("Please create a account or login.")
+      return
+    }
     const selectedDate = dates[slotIndex.daySlot];
     const selectedTime = times[slotIndex.timeSlot];
 
-    console.log("Booking Appointment for:");
-    console.log("Doctor:", doctorId);
-    console.log("Patient:", user?.email)
-    console.log("Date:", selectedDate.date);
-    console.log("Time:", selectedTime);
-
-    // Proceed with API call / booking logic here
+    const appointmentData = { doctorId: doctorId, patientId: user?.email, appointmentDate: selectedDate.date, appointmentTime: selectedTime }
+    const res = await bookAppointment(appointmentData)
+    if (res.success) {
+      await fetchAllAppointments();
+      navigate("/my-appointments")
+    } else {
+      toast.error(res.message)
+    }
   };
 
   const scrollContainerRef = useRef(null);
@@ -88,7 +97,7 @@ const Appointments = () => {
           <div>
             <img
               className="bg-primary w-full sm:max-w-72 rounded-lg"
-              src={docInfo?.profile_image}
+              src={docInfo?.profileImage}
               alt=""
             />
           </div>

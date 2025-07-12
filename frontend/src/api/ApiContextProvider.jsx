@@ -8,7 +8,7 @@ export const apiContext = createContext();
 
 const ApiContextProvider = ({ children }) => {
 
-  const { handleUserData, setTrackLoggrdIn, setDoctorsData } = useContext(AppContext)
+  const { handleUserData, setTrackLoggrdIn, setDoctorsData, setAppointmentsData } = useContext(AppContext)
 
   const [loading, setLoading] = useState({
     createAccountForPatient: false,
@@ -34,6 +34,7 @@ const ApiContextProvider = ({ children }) => {
           email: formData.email
         }
         handleUserData(userData)
+        setTimeout(async () => { await getPatientInfo(); }, 1000);
         return { success: true, message: data.message };
       } else {
         return { success: false, message: data.message };
@@ -61,6 +62,7 @@ const ApiContextProvider = ({ children }) => {
           email: data.email
         }
         handleUserData(userData)
+        setTimeout(async () => { await getPatientInfo(); }, 1000);
         return { success: true, message: data.message };
       } else {
         return { success: false, message: data.message };
@@ -128,7 +130,7 @@ const ApiContextProvider = ({ children }) => {
 
   const createPaymentOrder = async (amount) => {
     try {
-      const response = await axiosInstance.post("http://localhost:8080/api/payment/create-order", {
+      const response = await axiosInstance.post("/api/payment/create-order", {
         amount, // in rupees
       });
       const data = response.data;
@@ -143,7 +145,7 @@ const ApiContextProvider = ({ children }) => {
   }
 
   const verifyPayment = async (responseData) => {
-    const response = await axiosInstance.post("http://localhost:8080/api/payment/verify", responseData)
+    const response = await axiosInstance.post("/api/payment/verify", responseData)
     const data = response.data;
 
     if (data.status) {
@@ -162,6 +164,43 @@ const ApiContextProvider = ({ children }) => {
     }
   }
 
+  const bookAppointment = async (appointmentData) => {
+    console.log(appointmentData)
+    try {
+      const response = await axiosInstance.post("/patient/book-appointment", appointmentData);
+      const data = response.data;
+
+      if (data.status) {
+        return { success: true, message: data.message }
+      } else {
+        return { success: false, message: data.message }
+      }
+    } catch (error) {
+      return { success: false, message: error.message }
+    }
+  }
+
+  const fetchAllAppointments = async () => {
+    const response = await axiosInstance.get("/patient/all-appointments")
+    const resData = response.data;
+
+    if (!resData.status) {
+      return { success: false, message: resData.message }
+    }
+    setAppointmentsData(resData.data)
+    return { success: true, message: resData.message }
+  }
+
+  const cancelAppointment = async (appoId) => {
+    try {
+      const res = await axiosInstance.patch(`/patient/cancel-appointment/${appoId}`)
+      const resData = res.data;
+      return {success: resData.status, message: resData.message}
+    } catch (error) {
+      return {success: false, message: error.message}
+    }
+  }
+
   const values = {
     loading,
     logout,
@@ -172,7 +211,10 @@ const ApiContextProvider = ({ children }) => {
     uploadPatientImage,
     createPaymentOrder,
     verifyPayment,
-    fetchAllDoctorsDetails
+    fetchAllDoctorsDetails,
+    bookAppointment,
+    fetchAllAppointments,
+    cancelAppointment
   }
 
   return <apiContext.Provider value={values}>
