@@ -1,7 +1,7 @@
 import axios from 'axios';
 import SERVER_DETAILS from '../../dev';
 
-const URL = SERVER_DETAILS.PRODUCTION_URL;
+const URI = SERVER_DETAILS.PRODUCTION_URL;
 // const URI = SERVER_DETAILS.DEVELOPMENT_URL;
 
 const axiosInstance = axios.create({
